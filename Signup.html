@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Welcome Form</title>
+    <link rel="stylesheet" href="style1.css">
+    <script defer src="script.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="con-box">  
+            <form id="register-form" name="Formfill">
+                <h2>Register</h2>
+                <div class="input-signup" id="input-signup-new-username">
+                    <i class='bx bxs-user' ></i>
+                    <input type="text" name="Username" id="new-username" placeholder="Username" required>
+                </div>
+                <small id="new-username-error"></small>
+                <div class="input-signup" id="input-signup-new-password">
+                    <i class='bx bx-lock-alt' ></i>
+                    <input type="password" name="Email" id="new-password" placeholder="Password" required>
+                </div>
+                <small id="new-password-error"></small>
+                <div class="input-signup" id="input-signup-conf-password">
+                    <i class='bx bx-lock-alt' ></i>
+                    <input type="password" name="Password" id="conf-new-password" placeholder="Password confirmation" required>
+                </div>
+                <small id="conf-new-password-error"></small>
+                <div class="button">
+                    <input type="submit" class="button" value="Register">
+                </div>
+                <div class="group">
+                    <span><a href="login.html" class="Login">Login</a></span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        /* The first part content variables or constants that take elements from the DOM (Document Object Model) */
+        // These ones take the input fro the user
+        let newUsername = document.getElementById('new-username');
+        let newPassword = document.getElementById('new-password');
+        let confNewPassword = document.getElementById('conf-new-password');
+
+        // These display the error message when the user get wrong
+        const errorMessageNewUsername = document.getElementById('new-username-error');
+        const errorMessageNewPassword = document.getElementById('new-password-error');
+        const errorMessageConfNewPassword = document.getElementById('conf-new-password-error');
+
+        // And these ones change t he color of the border when the user get wrong too. 
+        // We could have take the class, then loop throught them, but the code would have been longer
+        const signupNewUsernameBorder = document.getElementById('input-signup-new-username');
+        const signupNewPasswordBorder = document.getElementById('input-signup-new-password');
+        const signupConfPasswordBorder = document.getElementById('input-signup-conf-password');
+
+        // The code below chacks if the usename respect the username patern
+        newUsername.addEventListener('keyup', function() {
+            if(!patternUsername.test(newUsername.value)) { // if doesn't
+                signupNewUsernameBorder.style.borderBottom = '2px solid red'; // border become red
+                errorMessageNewUsername.innerHTML = 'Username does not contain number'; // this message is displayed
+            }else {
+                signupNewUsernameBorder.style.borderBottom = '';
+                errorMessageNewUsername.innerHTML = '';
+            }
+        });
+
+        // The code below chacks if the usename respect the password patern
+        newPassword.addEventListener('keyup', function() {
+            if(newPassword.value.length == 0 || newPassword.value.length != 7){ // if it's empty or doesn't have 7 charaters
+                signupNewPasswordBorder.style.borderBottom = '2px solid red'; // border becom red
+                errorMessageNewPassword.innerHTML = 'The password content 7 characters'; // it's displied this message
+            }else if(!(patternPassword.test(newPassword.value))) { // if it doesn't follow the patern
+                errorMessageNewPassword.innerHTML = "The password must follow the format";
+            }else {
+                signupNewPasswordBorder.style.borderBottom = '';
+                errorMessageNewPassword.innerHTML = '';
+            }
+        });
+
+        // This one check if the the password id qual this one
+        confNewPassword.addEventListener('keyup', function() {
+            if(confNewPassword.value === newPassword.value){ // if both passwoirds are the same 
+                signupConfPasswordBorder.style.borderBottom = '';
+                errorMessageConfNewPassword.innerHTML = '';
+            }else { // if not
+                signupConfPasswordBorder.style.borderBottom = '2px solid red'; // border become red
+                errorMessageConfNewPassword.innerHTML = 'The password is incorrect'; // displayed this message
+            }
+        });
+
+        /* ----------------------------------------------------------------
+            this function add a event listener on the sign up form. The 
+            function redirect the user to the home when all the relues have
+            been respected and the user inforemation doesn't exist already.
+         ---------------------------------------------------------------- */
+        document.getElementById('register-form').addEventListener('submit', function(event){
+            console.log('Login function called'); // Debugging line
+            console.log('Username: ' + newUsername.value); // Debugging line
+            console.log('Password: ' + newPassword.value); // Debugging line
+            
+            event.preventDefault(); // This method prevent the the user to eccess the home page
+
+            // These two constant check if the new username and password given by the user exist already 
+            // in hte local Stroage
+            const usernameExists = old_username.includes(newUsername.value);
+            const passwordExists = old_password.includes(newPassword.value);
+            
+            /* The if ststement do all at once */
+            if(usernameExists && passwordExists) { // if username and password already exist
+                alert('Username and password already exit. Please choose a different combination.');
+            }else if(usernameExists) { // if only usernasme exists 
+                alert('Username already taken. Please choose a different username');
+            }else if(passwordExists) { // if only password exists
+                alert('Password already taken. Please choose a different password');
+            }else { 
+                /* Then the code checks if they don't exist in the JSON object instead */
+                // The function goes to check if the username is found inside of the JSON object
+                const newStudent = studentData.find(newStudent => newStudent.username === newUsername.value);
+                if(newStudent) { // if the username exists already
+                    if(newStudent.password === newPassword.value) { // then checks if the password exist as well
+                        alert('Username and password already exit. Please choose a different combination.');
+                    }else {
+                        alert('Username already taken. Please choose a different username');
+                    }
+                }else {
+                    /* if both don't exist neither */
+                    // Then see if the username and password follow the patern of the websitee
+                    if(patternUsername.test(newUsername.value) && patternPassword.test(newPassword.value)) {
+                        old_username.push(newUsername.value); // This code add the username inside of the array local Storage
+                        old_password.push(newPassword.value); // This code add the password inside of 
+                        console.log('Successful registretion'); // Debugging line
+                        const myUserVariable = newUsername.value; // This constant takes the username value
+                        localStorage.setItem("muUserVariable", myUserVariable); // This code stores the username in the local Storage
+                        window.location.href = "home.html"; // access to the home page
+                        /* The code below will theusername and the password to the array local Storage */
+                        localStorage.setItem('data username', JSON.stringify(old_username));
+                        localStorage.setItem('data password', JSON.stringify(old_password));
+                    }else {
+                        alert('Incorrect format');
+                    };
+                };
+            };
+        });
+    </script>
+</body>
+
+</html>

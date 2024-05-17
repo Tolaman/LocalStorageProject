@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Welcome Form</title>
+    <link rel="stylesheet" href="style1.css">
+    <script defer src="script.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <span class="bg-animate"></span>
+        <div class="form-box login">
+            <h2>Login</h2>
+            <form id="log-form">
+                <div class="input-box" id="input-username">
+                    <input id="username" type="text" required>
+                    <label>Username</label>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <small id="username-error-message"></small>
+                <div class="input-box" id="input-password">
+                    <input id="password" type="password" required>
+                    <label>Password</label>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <small id="password-error-message"></small>
+                <button type="submit" class="btn">Login</button>
+                <div class="logreg-link">
+                    <p>Don't have an account? <a href="Signup.html" class="register-link">Sign Up</a></p>
+                </div>
+            </form>
+        </div>
+        <div class="info-text login">
+            <h2>Welcome!</h2>
+            <p>Welcome to the Student Calculator. Let's crunch the numbers and see your total score!</p>
+        </div>
+    </div>
+    <script>
+        /* The first part content variables or constants that take elements from the DOM (Document Object Model) */
+        // These ones take the input fro the user
+        let logUsername = document.getElementById('username');
+        let logPassword = document.getElementById('password');
+
+        // And these ones change t he color of the border when the user get wrong too. 
+        // We could have take the class, then loop throught them, but the code would have been longer
+        const usernameBorder = document.getElementById('input-username');
+        const passwordBorder = document.getElementById('input-password');
+
+        /* ----------------------------------------------------------------
+            this function add a event listener on the login form. The 
+            function redirect the user to the home when all the relues have
+            been respected and the user inforemations exist already.
+         ---------------------------------------------------------------- */
+        document.getElementById('log-form').addEventListener('submit', function(event){
+            console.log('Login function called'); // Debugging line
+            console.log('Username: ' + logUsername.value); // Debugging line
+            console.log('Password: ' + logPassword.value); // Debugging line
+
+            event.preventDefault(); // This method prevent the the user to eccess the home page
+            
+            // These two constant check if the username and password given by the user exist already 
+            // in hte local Stroage
+            const logUsernameExists = old_username.includes(logUsername.value);
+            const logPasswordExists = old_password.includes(logPassword.value);
+
+            /* The if ststement do all at once */
+            if(logUsernameExists) { // if the username is found in the local Storage
+                console.log('Username found ' + logUsername); // Debugging line
+                if(logPasswordExists) { // And if the password is found too in the local Storage
+                    console.log('Password found ' + logPassword); // Debugging line
+                    const myUserVariable = logUsername.value; // store the username in this constant
+                    // Then insert the username value inside of the local Storage
+                    localStorage.setItem("muUserVariable", myUserVariable);
+                    window.location.href = "home.html"; // redict to the home page
+                }else { // else send a error message about the password
+                    passwordBorder.style.borderBottom = '2px solid red';
+                    alert('Wrong Password');
+                }
+            }else {
+                /* Check if the username and password are in studentData */
+                if(studentData) {
+                    const students = studentData; // Store the studentData object in the students constant
+                    // The function goes to check if the username is found inside of the JSON object
+                    const user = students.find(student => student.username === logUsername.value);
+
+                    if(user) { // if the username is found
+                        if(user.password === logPassword.value) { // then if the password is found
+                            console.log('Successful login'); // Debugging line
+                            // access to the home page
+                            const myUserVariable = logUsername.value; // store the username in this constant
+                            // Then insert the username value inside of the local Storage
+                            localStorage.setItem("muUserVariable", myUserVariable);
+                            window.location.href = "home.html"; // redict to the home page
+                        }else { // else send a error message about the password
+                            passwordBorder.style.borderBottom = '2px solid red';
+                            alert('Wrong Password');
+                        }
+                    }else { // else send a error message
+                        usernameBorder.style.borderBottom = '2px solid red';
+                        passwordBorder.style.borderBottom = '2px solid red';
+                        alert("User doesn't exist");
+                    }
+                }else {
+                    console.log('Data not loaded'); // In case the data doesn't load
+                };
+            }
+        });
+    </script>
+</body>
+
+</html>

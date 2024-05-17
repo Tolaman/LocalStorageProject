@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="script.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+        *{
+            margin: 0px;
+            padding: 0px;
+            font-family: 'Roboto', sans-serif;
+        }
+        a {
+            text-decoration: none;
+            color: #D0E1F9;
+            margin-top: 50px;
+        }
+        a:hover {
+            color: #D0E1F9;
+            border-bottom: 1px solid #D0E1F9;
+        }
+        body{
+            background-color: #282A37;
+        }
+        .container{
+            display: flex;
+            width: 70%;
+            height: 510px;
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #fff;
+        }
+        .text-container{
+            width: 400px;
+            height: 100%;
+            background-color: #0e1b29;
+            text-align: center;
+            border-radius: 10px 0px 0px 10px;
+        }
+        .text-container h2{
+            margin-top: 50px;
+            font-size: 2rem;
+            color: #D0E1F9;
+            letter-spacing: 1px;
+        }
+        .text-container ul li {
+            list-style-type: none;
+            color: #fff;
+            margin-top: 20px;
+        }
+        .content {
+            padding: 40px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .content h1 {
+            margin: auto;
+            font-size: 1.5em;
+            color: #D0E1F9;
+        }
+        .content p {
+            color: #fff;
+            margin-top: 20px;
+            font-size: 0.8em;
+        }
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .every-term{
+            display: flex;
+            justify-content: space-between;
+            width: 160px;
+            height: 50px;
+        }
+        .content .form-container h3{
+            color: #fff;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        .form-container input{
+            width: 70px;
+            height: 20px;
+            padding: 10px;
+            outline: none;
+            background-color: #0e1b29;
+            border: none; 
+            border-radius: 3px;
+            font-size: 1em;
+            color: #fff;
+        }
+        .content button{
+            height: 50px;
+            width: 150px;
+            margin-top: 50px;
+            padding: 0px 10px;
+            background: none;
+            color: #fff;
+            border: 2px solid #D0E1F9;
+            outline: none;
+            font-size: medium;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .result{
+            width: 65px;
+            height: 30px;
+            background-color: #152d47;
+            border-radius: 3px;
+            margin: 10px auto;
+            padding-top: 5px;
+        }
+    </style>
+    <title>Student Results Form</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="text-container">
+            <h2>Hello <span id="current-user"></span>!</h2>
+            <ul>
+                <li>
+                    Student Percentage:
+                    <div class="result" id="percentage"></div>
+                </li>
+                <li>
+                    Student Total Marks:
+                    <div class="result" id="marks"></div>
+                </li>
+                <li>
+                    Student Final Score:
+                    <div class="result" id="result"></div>
+                </li>
+            </ul> 
+            <a href="login.html">Log out</a>
+        </div>
+            
+        <div class="content">
+            <h1>Check your final score here...</h1>
+            <p>Enter a mark for each term to see your final score</p>
+            <div class="form-container">
+                <div class="every-term">
+                    <h3 for="name">Term 1: </h3>
+                    <input type="number" placeholder="0.00" id="T1">
+                </div>
+                <div class="every-term">
+                    <h3 for="name">Term 2: </h3>
+                    <input type="number" placeholder="0.00" id="T2">
+                </div>
+            </div>
+            <div class="form-container">
+                <div class="every-term">
+                    <h3 for="name">Term 3: </h3>
+                    <input type="number" placeholder="0.00" id="T3">
+                </div>
+                <div class="every-term">
+                    <h3 for="name">Term 4: </h3>
+                    <input type="number" placeholder="0.00" id="T4">
+                </div>
+            </div>
+            <button type="button" onclick="Calculate()">Calculate</button>
+        </div>
+    </div> 
+    <script>
+        // This code get the username given by the user on the login or signup page
+        const myUserVariable = localStorage.getItem("muUserVariable");
+        // Then displays it on the home page
+        document.getElementById('current-user').innerHTML = myUserVariable;
+        // The code get all the input tag in the DOM 
+        const numberInput = document.getElementsByTagName('input');
+        /* The function calculate the sum, total and avarage  */
+        function Calculate() {
+            let sum = 0;
+            for(let i = 0; i < numberInput.length; i++) {
+                let value = parseFloat(numberInput[i].value);
+                sum += value;
+            }
+            console.log('oparation sucess');
+            let average = sum / numberInput.length;
+            document.getElementById('result').innerHTML = average.toFixed(2);
+            document.getElementById('marks').innerHTML = sum.toFixed(2);
+            document.getElementById('percentage').innerHTML = (sum * 100) / 400 + '%';
+        }
+        /* This piece of code loads on each input and stop the user to enter other than number */
+        document.addEventListener('DOMContentLoaded', function () {
+            for(let i = 0; i < numberInput.length; i++) { // It loops the input. tag can be used as a array
+                numberInput[i].addEventListener('input', function () {
+                    const value = this.value;
+                    // Remove non-numeric characters using a regular expression
+                    const numericValue = value.replace(/[^0-9]/g, '');
+                    this.value = numericValue; 
+                })
+            }
+        }) 
+    </script>
+</body>
+</html>
